@@ -1,14 +1,15 @@
-# Zastosowanie algorytmu TOPSIS do selekcji cech w systemach wykrywania intruzji na bazie zbioru danych NSL-KDD
+# Zastosowanie algorytmów rankingowych do wyboru najlepszego klasyfikatora w systemach wykrywania intruzji na podstawie zbioru danych NSL-KDD przy wykorzystaniu różnych metryk oceny.
 
-Podstawowym problemem, który staramy się rozwiązać, jest redukcja czasu obliczeń w procesie detekcji intruzji, przy jednoczesnym zachowaniu akceptowalnej dokładności klasyfikacji. Wielowymiarowość danych oraz duża liczba cech zwiększają złożoność obliczeniową, co wpływa negatywnie na efektywność systemów IDS.
-W projekcie zastosujemy algorytm TOPSIS, który umożliwia ocenę i wybór najbardziej efektywnych metod selekcji cech spośród różnych alternatyw. Algorytm TOPSIS polega na wyborze rozwiązania najbliższego rozwiązaniu idealnemu, z uwzględnieniem wielu atrybutów.
+Systemy wykrywania intruzji (IDS) odgrywają kluczową rolę w ochronie sieci przed atakami i nieautoryzowanym dostępem. Współczesne IDS muszą przetwarzać miliony pakietów danych, co stawia wysokie wymagania w zakresie precyzji i szybkości detekcji anomalii. W związku z tym kluczowe staje się opracowanie efektywnych metod oceny i wyboru klasyfikatorów, które najlepiej spełniają wymagania konkretnego systemu IDS.
+W ramach tego projektu wykorzystamy zmodyfikowany zbiór danych NSL-KDD oraz algorytmy rankingowe, takie jak PROMETHEE, VIKOR i AHP. Celem jest ocena skuteczności różnych klasyfikatorów w systemach IDS na podstawie wybranych metryk, takich jak dokładność, F1-score, czy czas obliczeń, a także wyznaczenie najlepszego klasyfikatora do wykrywania intruzji w określonym środowisku.
 
 ## Przyjęta metodyka
 
-* Wybór zbioru danych - W projekcie wykorzystamy zbiór NSL-KDD, zbiór ten zawiera oznaczenia ataków i poziom trudności klasyfikacji.
-* Klasyfikacja - Różne rodzaje klasyfikatorów zostaną wykorzystane, do uzyskania metryk pozwalających na dalszą analizę przy użyciu algorytmu TOPSIS.
-* Selekcja cech - Zastosujemy dziesięć różnych technik selekcji cech, a wyniki zostaną ocenione za pomocą algorytmu TOPSIS.
-* Analiza wyników - Wyniki TOPSIS zostaną obliczone w środowisku Python, co pozwoli na rangowanie technik selekcji cech pod kątem efektywności.
+* Wybór zbioru danych - W projekcie wykorzystamy zbiór NSL-KDD, który zawiera oznaczenia ataków i poziom trudności klasyfikacji.
+* Klasyfikacja - Stosujemy różne rodzaje klasyfikatorów, aby uzyskać metryki, takie jak dokładność, F1-score, i czas obliczeń, które posłużą do dalszej analizy przy użyciu algorytmów rankingowych.
+* Ranking klasyfikatorów - Wyniki klasyfikatorów zostaną ocenione za pomocą algorytmów rankingowych, takich jak PROMETHEE, VIKOR oraz AHP.
+* Analiza wyników - Obliczenia algorytmów rankingowych zostaną przeprowadzone w środowisku Python, co pozwoli na rangowanie klasyfikatorów pod kątem ich efektywności i przydatności w systemach IDS.
+
 
 ## Pobranie repozytorium
 
