@@ -14,24 +14,19 @@ class AHP(RankingAlgorithm):
         :param weights: Wagi kryteriów (zdefiniowane przez użytkownika lub wyznaczone z macierzy porównań parowych).
         :return: Słownik z rankingiem i wynikami dla alternatyw (alternatywa, (miejsce, wynik)).
         """
-
-        # Normalizacja macierzy decyzyjnej dla każdego kryterium
         normalized_matrix = decision_matrix.copy()
         for criterion in decision_matrix.columns:
-            if criteria_types[criterion] == 1:  # Maksymalizacja
+            if criteria_types[criterion] == 1:
                 normalized_matrix[criterion] = decision_matrix[criterion] / decision_matrix[criterion].sum()
-            elif criteria_types[criterion] == -1:  # Minimalizacja
+            elif criteria_types[criterion] == -1:
                 normalized_matrix[criterion] = decision_matrix[criterion].min() / decision_matrix[criterion]
 
-        # Mnożenie przez wagi kryteriów
         weighted_matrix = normalized_matrix.copy()
         for criterion in weights.keys():
             weighted_matrix[criterion] *= weights[criterion]
 
-        # Sumowanie ważonych wyników dla każdej alternatywy
         final_scores = weighted_matrix.sum(axis=1)
 
-        # Tworzenie rankingu
         alternatives = decision_matrix.index.tolist()
         results = pd.DataFrame({'Alternative': alternatives, 'Score': final_scores})
         results = results.sort_values(by='Score', ascending=False).reset_index(drop=True)
@@ -43,8 +38,8 @@ class AHP(RankingAlgorithm):
 # testing:
 decision_matrix = pd.DataFrame({
     "Accuracy": [0.95, 0.91, 0.93],
-    "F1 Score": [0.91, 0.89, 0.91],
-    "Time": [0.90, 0.34, 0.25]
+    "F1 Score": [0.91, 0.99, 0.91],
+    "Time": [0.90, 0.1, 0.25]
 }, index=["Logistic Regression", "Random Forest", "XGBoost"])
 
 criteria_types = {
