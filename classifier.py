@@ -189,7 +189,7 @@ class LGBMC(Classifier):
         self.model_name = 'LGBMC'
 
     def _initialize_model(self):
-        return LGBMClassifier()
+        return LGBMClassifier(verbose=-1) #supressing logs from here
     
 
 class ClassifierFactory:
@@ -225,5 +225,5 @@ def _train_all(num_iteration):
             model._prep_split_data()
             model._train_and_save()
 
-NUM_ITER = 1
+NUM_ITER = 2
 _train_all(NUM_ITER) #comment this line to prevent further learning processes
