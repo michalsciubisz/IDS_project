@@ -225,5 +225,5 @@ def _train_all(num_iteration):
             model._prep_split_data()
             model._train_and_save()
 
-NUM_ITER = 2
-_train_all(NUM_ITER) #comment this line to prevent further learning processes
+# NUM_ITER = 2
+# _train_all(NUM_ITER) #comment this line to prevent further learning processes
