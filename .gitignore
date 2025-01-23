@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 projekt.zip
 notka.txt
+doc_files/
 
 # C extensions
 *.so
