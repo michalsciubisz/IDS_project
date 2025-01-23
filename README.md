@@ -23,6 +23,12 @@ git clone https://github.com/michalsciubisz/IDS_project.git
 pip install -r requirements.txt
 ```
 
+## Uruchamianie aplikacji
+
+```
+streamlit run .\app.py
+```
+
 ## Istotne linki:
 
 [Artykuł referencyjny](https://www.researchgate.net/publication/269399129_TOPSIS_Based_Multi-Criteria_Decision_Making_of_Feature_Selection_Techniques_for_Network_Traffic_Dataset )
