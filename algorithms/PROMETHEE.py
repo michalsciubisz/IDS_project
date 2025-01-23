@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from typing import Dict
-from algorithm import RankingAlgorithm
+from algorithms.algorithm import RankingAlgorithm
 
 
 class PROMETHEE(RankingAlgorithm):
@@ -114,6 +114,6 @@ weights = {
     "Time": 0.2
 }
 
-promethee = PROMETHEE()
-ranking = promethee.rank(decision_matrix, criteria_types, weights)
-print(ranking)
+# promethee = PROMETHEE()
+# ranking = promethee.rank(decision_matrix, criteria_types, weights)
+# print(ranking)

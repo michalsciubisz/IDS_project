@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from algorithm import RankingAlgorithm
+from algorithms.algorithm import RankingAlgorithm
 
 
 class VIKOR(RankingAlgorithm):
@@ -81,6 +81,6 @@ weights = {
     "Time": 0.2
 }
 
-vikor = VIKOR()
-ranking = vikor.rank(decision_matrix, criteria_types, weights)
-print(ranking)
+# vikor = VIKOR()
+# ranking = vikor.rank(decision_matrix, criteria_types, weights)
+# print(ranking)

@@ -1,4 +1,4 @@
-from algorithm import RankingAlgorithm
+from algorithms.algorithm import RankingAlgorithm
 import pandas as pd
 import numpy as np
 
@@ -50,7 +50,7 @@ weights = {
     "Time": 0.2
 }
 
-entropy_method = EntropyMethod()
-ranking = entropy_method.rank(decision_matrix, criteria_types, weights)
+# entropy_method = EntropyMethod()
+# ranking = entropy_method.rank(decision_matrix, criteria_types, weights)
 
-print(ranking)
+# print(ranking)

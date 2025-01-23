@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from algorithm import RankingAlgorithm
+from algorithms.algorithm import RankingAlgorithm
 
 class Electre(RankingAlgorithm):
     def __init__(self):
@@ -88,7 +88,7 @@ class Electre(RankingAlgorithm):
         """
         normalized_matrix = self._normalize(decision_matrix, criteria_types)
         concordance_matrix, discordance_matrix = self._calculate_concordance_discordance(
-            normalized_matrix, criteria_types, weights
+            normalized_matrix, weights
         )
         electre_scores = self._calculate_electre_scores(concordance_matrix, discordance_matrix)
         ranking = self._rank_alternatives(electre_scores)
@@ -115,6 +115,6 @@ weights = {
     "Time": 0.2
 }
 
-electre = Electre()
-ranking = electre.rank(decision_matrix, criteria_types, weights)
-print(ranking)
+# electre = Electre()
+# ranking = electre.rank(decision_matrix, criteria_types, weights)
+# print(ranking)

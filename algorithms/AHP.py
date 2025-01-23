@@ -1,5 +1,5 @@
 import pandas as pd
-from algorithm import RankingAlgorithm
+from algorithms.algorithm import RankingAlgorithm
 
 class AHP(RankingAlgorithm):
     def __init__(self):
@@ -54,6 +54,6 @@ weights = {
     "Time": 0.2
 }
 
-ahp = AHP()
-ranking = ahp.rank(decision_matrix, criteria_types, weights)
-print(ranking)
+# ahp = AHP()
+# ranking = ahp.rank(decision_matrix, criteria_types, weights)
+# print(ranking)
