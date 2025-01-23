@@ -5,6 +5,7 @@ from algorithms.VIKOR import *
 from algorithms.PROMETHEE import *
 from algorithms.ELECTRE import *
 from algorithms.ENTROPY import *
+from visualization import visualize_alternatives
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -61,6 +62,7 @@ def main():
         df = _load_data(classify_results_file)
         st.subheader("Wybór najlepszego klasyfikatora")
         st.dataframe(df)
+        visualize_alternatives(df)
 
 if __name__ == "__main__":
     main()

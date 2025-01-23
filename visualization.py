@@ -1,0 +1,76 @@
+import plotly.express as px
+import streamlit as st
+
+def visualize_alternatives(df):
+    st.subheader("Wizualizacje alternatyw względem kryteriów")
+
+    # Kryteria maksymalizacyjne i minimalizacyjne
+    maximize_criteria = [
+        "Accuracy", "Sensitivity", "Precision", "F1 Score",
+        "Specificity", "Balanced accuracy", "MCC"
+    ]
+    minimize_criteria = ["False Positive Rate", "False Negative Rate", "Time"]
+
+    # Przygotowanie unikalnych kolorów dla każdej alternatywy
+    unique_models = df["Model name"].unique()
+    colors = px.colors.qualitative.Set2  # Wybór palety kolorów
+    model_colors = {model: colors[i % len(colors)] for i, model in enumerate(unique_models)}
+
+    # Wykres 3D dla maksymalizacyjnych (z możliwością wyboru kryteriów)
+    st.write("### Wykres 3D: Kryteria maksymalizacyjne")
+    default_max_criteria = maximize_criteria[:3]  # Domyślny wybór 3 kryteriów
+    max_x = st.selectbox("Kryterium na osi X", maximize_criteria, index=maximize_criteria.index(default_max_criteria[0]))
+    max_y = st.selectbox("Kryterium na osi Y", maximize_criteria, index=maximize_criteria.index(default_max_criteria[1]))
+    max_z = st.selectbox("Kryterium na osi Z", maximize_criteria, index=maximize_criteria.index(default_max_criteria[2]))
+
+    fig1 = px.scatter_3d(
+        df, x=max_x, y=max_y, z=max_z, color="Model name",
+        title=f"Wizualizacja 3D dla kryteriów maksymalizacyjnych ({max_x}, {max_y}, {max_z})",
+        labels={"x": max_x, "y": max_y, "z": max_z},
+        color_discrete_map=model_colors  # Przypisanie kolorów
+    )
+    fig1.update_traces(marker=dict(size=8))
+    st.plotly_chart(fig1, use_container_width=True)
+
+    # Wykres 3D dla minimalizacyjnych (bez możliwości wyboru kryteriów)
+    st.write("### Wykres 3D: Kryteria minimalizacyjne")
+    min_x, min_y, min_z = minimize_criteria  # Kryteria na sztywno
+    fig2 = px.scatter_3d(
+        df, x=min_x, y=min_y, z=min_z, color="Model name",
+        title=f"Wizualizacja 3D dla kryteriów minimalizacyjnych ({min_x}, {min_y}, {min_z})",
+        labels={"x": min_x, "y": min_y, "z": min_z},
+        color_discrete_map=model_colors  # Przypisanie kolorów
+    )
+    fig2.update_traces(marker=dict(size=8))
+    st.plotly_chart(fig2, use_container_width=True)
+
+    # Sumowanie wartości maksymalizacyjnych i minimalizacyjnych dla wykresów słupkowych
+    st.write("### Sumaryczna ocena alternatyw dla maksymalizacyjnych i minimalizacyjnych kryteriów")
+    df["Max_Sum"] = df[maximize_criteria].sum(axis=1)  # Suma maksymalizacyjnych
+    df["Min_Sum"] = df[minimize_criteria].sum(axis=1)  # Suma minimalizacyjnych
+
+    # Sortowanie
+    max_sorted = df.sort_values("Max_Sum", ascending=False)
+    min_sorted = df.sort_values("Min_Sum", ascending=True)
+
+    # Wykres słupkowy dla maksymalizacyjnych
+    st.write("#### Suma wartości dla kryteriów maksymalizacyjnych")
+    fig3 = px.bar(
+        max_sorted, x="Model name", y="Max_Sum", color="Model name",
+        title="Suma maksymalizacyjnych kryteriów (posortowane)",
+        labels={"Max_Sum": "Suma maksymalizacyjnych", "Model name": "Model"},
+        color_discrete_map=model_colors  # Przypisanie kolorów
+    )
+    st.plotly_chart(fig3, use_container_width=True)
+
+    # Wykres słupkowy dla minimalizacyjnych
+    st.write("#### Suma wartości dla kryteriów minimalizacyjnych")
+    fig4 = px.bar(
+        min_sorted, x="Model name", y="Min_Sum", color="Model name",
+        title="Suma minimalizacyjnych kryteriów (posortowane)",
+        labels={"Min_Sum": "Suma minimalizacyjnych", "Model name": "Model"},
+        color_discrete_map=model_colors  # Przypisanie kolorów
+    )
+    st.plotly_chart(fig4, use_container_width=True)
+
+
