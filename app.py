@@ -5,7 +5,7 @@ from algorithms.VIKOR import *
 from algorithms.PROMETHEE import *
 from algorithms.ELECTRE import *
 from algorithms.ENTROPY import *
-from visualization import visualize_alternatives
+from visualization import visualize_alternatives, plot_mcdm_results
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -32,6 +32,37 @@ def _train_classifiers(training_df, num_iteration):
             executor.map(_train_model, models)
 
     return models
+
+def _adjust_weights(headers):
+    """Dynamic weight adjustment UI for criteria."""
+    weights = {}
+    with st.expander("Adjust Weights for Criteria"):
+        for criterion in headers:
+            weights[criterion] = st.slider(
+                f"Set weight for {criterion}",
+                min_value=0.0,
+                max_value=1.0,
+                value=0.5,
+                step=0.01,
+            )
+    return weights
+
+def _execute_mcdm_algorithms(matrix, criteria_types, weights):
+    """Run all MCDM algorithms and return rankings."""
+    algorithms = {
+        "AHP": AHP(),
+        "VIKOR": VIKOR(),
+        "PROMETHEE": PROMETHEE(),
+        "ELECTRE": ELECTRE(),
+        "ENTROPY": ENTROPY(),
+    }
+    
+    results = {}
+    for name, algorithm in algorithms.items():
+    
+        results[name] = algorithm.rank(matrix, criteria_types, weights)
+    
+    return results
 
 #tutaj cala glowna logika aplikacji
 def main():
@@ -62,7 +93,52 @@ def main():
         df = _load_data(classify_results_file)
         st.subheader("Wybór najlepszego klasyfikatora")
         st.dataframe(df)
-        visualize_alternatives(df)
+        # visualize_alternatives(df)
+
+         # Adjust weights
+        headers = list(df.columns)[1:]  # Skip the first column (e.g., Model name)
+        weights = _adjust_weights(headers)
+
+        # Determine criteria types
+        criteria_types = {
+            "Accuracy": 1,
+            "Sensitivity": 1,
+            "Precision": 1,
+            "F1 Score": 1,
+            "Specificity": 1,
+            "Balanced accuracy": 1,
+            "MCC": 1,
+            "False Positive Rate": -1,
+            "False Negative Rate": -1,
+            "Time": -1,
+        }
+
+        # Execute MCDM algorithms
+        if st.button("Evaluate with MCDM Algorithms"):
+            alternatives = (
+                df.loc[:, ~df.columns.isin(["Max_Sum", "Min_Sum"])]
+                .set_index("Model name")
+                .copy()
+            )
+            
+            with st.spinner("Evaluating classifiers..."):
+                results = _execute_mcdm_algorithms(alternatives, criteria_types, weights)
+
+            st.subheader("MCDM Rankings")
+            
+            for method, rankings in results.items():
+                comparison_data = []
+                for classifier, (rank, score) in rankings.items():
+                    comparison_data.append({
+                        "Classifier": classifier,
+                        "Rank": rank,
+                        "Score": score
+                    })
+                comparison_df = pd.DataFrame(comparison_data)
+                st.write(f"### {method} Result:")
+                st.dataframe(comparison_df)
+
+                plot_mcdm_results(method, rankings)
 
 if __name__ == "__main__":
     main()

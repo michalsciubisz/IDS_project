@@ -2,7 +2,7 @@ from algorithms.algorithm import RankingAlgorithm
 import pandas as pd
 import numpy as np
 
-class EntropyMethod(RankingAlgorithm):
+class ENTROPY(RankingAlgorithm):
     def rank(self, decision_matrix: pd.DataFrame, criteria_types: dict[str, int], weights: dict[str, float]) -> dict[str, tuple]:
         """
         Implementacja rankingu dla algorytmu Entropy.

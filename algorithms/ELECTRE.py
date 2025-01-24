@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from algorithms.algorithm import RankingAlgorithm
 
-class Electre(RankingAlgorithm):
+class ELECTRE(RankingAlgorithm):
     def __init__(self):
         super().__init__()
         
@@ -64,21 +64,22 @@ class Electre(RankingAlgorithm):
             electre_scores[i] = score
         return electre_scores
 
-    def _rank_alternatives(self, electre_scores: dict) -> dict:
+    def _rank_alternatives(self, electre_scores: dict, index: pd.Index) -> dict:
         """
         Ocena alternatyw ze względu na wartość wskaźnika.
         :param electre_scores: Słownik wartości wskaźnika Electre dla poszczegónych wierszy {indeks, wartość wskaźnika}.
+        :param index: Index of the original decision matrix.
         :return: Słownik z rankingiem alternatyw {alternatywa, (miejsce, wynik)}.
         """
         sorted_scores = sorted(electre_scores.items(), key=lambda item: item[1], reverse=True)
         ranked_alternatives = {
-            list(decision_matrix.index)[i]: (rank + 1, score)
+            index[i]: (rank + 1, score)  # Use the provided index
             for rank, (i, score) in enumerate(sorted_scores)
         }
         return ranked_alternatives
     
     def rank(self, decision_matrix: pd.DataFrame, criteria_types: dict[str, int], weights: dict[str, float]) \
-            -> dict[str, tuple]:
+        -> dict[str, tuple]:
         """
         Implementacja rankingu dla algorytmu ELECTRE.
         :param decision_matrix: Macierz decyzyjna (alternatywy x kryteria).
@@ -91,8 +92,7 @@ class Electre(RankingAlgorithm):
             normalized_matrix, weights
         )
         electre_scores = self._calculate_electre_scores(concordance_matrix, discordance_matrix)
-        ranking = self._rank_alternatives(electre_scores)
-
+        ranking = self._rank_alternatives(electre_scores, decision_matrix.index)  # Pass the index here
         return ranking
 
 

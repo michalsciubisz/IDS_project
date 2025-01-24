@@ -1,5 +1,8 @@
 import plotly.express as px
 import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
 
 def visualize_alternatives(df):
     st.subheader("Wizualizacje alternatyw względem kryteriów")
@@ -74,3 +77,33 @@ def visualize_alternatives(df):
     st.plotly_chart(fig4, use_container_width=True)
 
 
+def plot_mcdm_results(method, rankings):
+    # Convert rankings into a DataFrame
+    method_data = [(classifier, rank, score) for classifier, (rank, score) in rankings.items()]
+    method_df = pd.DataFrame(method_data, columns=["Classifier", "Rank", "Score"])
+    
+    # Sort by rank to ensure proper order
+    method_df = method_df.sort_values(by="Rank")
+    
+    # Create a horizontal bar plot for each method's results
+    fig = px.bar(
+        method_df, 
+        x="Score", 
+        y="Classifier", 
+        color="Classifier", 
+        orientation="h",  # Horizontal bars
+        title=f"Classifier Scores for {method}",
+        labels={"Score": "Score", "Classifier": "Classifier"},
+        color_discrete_sequence=px.colors.qualitative.Set2  # Use the Set2 color palette
+    )
+    
+    # Update the layout for better readability
+    fig.update_layout(
+        xaxis_title="Score",
+        yaxis_title="Classifier",
+        plot_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=100, r=100, t=50, b=50)
+    )
+    
+    # Display the plot within the Streamlit app
+    st.plotly_chart(fig, use_container_width=True)
