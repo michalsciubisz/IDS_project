@@ -93,7 +93,7 @@ def main():
         df = _load_data(classify_results_file)
         st.subheader("Wybór najlepszego klasyfikatora")
         st.dataframe(df)
-        # visualize_alternatives(df)
+        visualize_alternatives(df)
 
          # Adjust weights
         headers = list(df.columns)[1:]  # Skip the first column (e.g., Model name)

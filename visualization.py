@@ -49,17 +49,23 @@ def visualize_alternatives(df):
 
     # Sumowanie wartości maksymalizacyjnych i minimalizacyjnych dla wykresów słupkowych
     st.write("### Sumaryczna ocena alternatyw dla maksymalizacyjnych i minimalizacyjnych kryteriów")
-    df["Max_Sum"] = df[maximize_criteria].sum(axis=1)  # Suma maksymalizacyjnych
-    df["Min_Sum"] = df[minimize_criteria].sum(axis=1)  # Suma minimalizacyjnych
+    max_sum = df[maximize_criteria].sum(axis=1).tolist()  # Suma maksymalizacyjnych
+    min_sum = df[minimize_criteria].sum(axis=1).tolist()  # Suma minimalizacyjnych
 
-    # Sortowanie
-    max_sorted = df.sort_values("Max_Sum", ascending=False)
-    min_sorted = df.sort_values("Min_Sum", ascending=True)
+    # Tworzenie list alternatyw i odpowiadających im wartości
+    models = df["Model name"].tolist()
+    max_data = list(zip(models, max_sum))
+    min_data = list(zip(models, min_sum))
+
+    # Sortowanie listy wyników
+    max_sorted = sorted(max_data, key=lambda x: x[1], reverse=True)  # Sortowanie malejąco
+    min_sorted = sorted(min_data, key=lambda x: x[1])  # Sortowanie rosnąco
 
     # Wykres słupkowy dla maksymalizacyjnych
     st.write("#### Suma wartości dla kryteriów maksymalizacyjnych")
     fig3 = px.bar(
-        max_sorted, x="Model name", y="Max_Sum", color="Model name",
+        pd.DataFrame(max_sorted, columns=["Model name", "Max_Sum"]),
+        x="Model name", y="Max_Sum", color="Model name",
         title="Suma maksymalizacyjnych kryteriów (posortowane)",
         labels={"Max_Sum": "Suma maksymalizacyjnych", "Model name": "Model"},
         color_discrete_map=model_colors  # Przypisanie kolorów
@@ -69,12 +75,14 @@ def visualize_alternatives(df):
     # Wykres słupkowy dla minimalizacyjnych
     st.write("#### Suma wartości dla kryteriów minimalizacyjnych")
     fig4 = px.bar(
-        min_sorted, x="Model name", y="Min_Sum", color="Model name",
+        pd.DataFrame(min_sorted, columns=["Model name", "Min_Sum"]),
+        x="Model name", y="Min_Sum", color="Model name",
         title="Suma minimalizacyjnych kryteriów (posortowane)",
         labels={"Min_Sum": "Suma minimalizacyjnych", "Model name": "Model"},
         color_discrete_map=model_colors  # Przypisanie kolorów
     )
     st.plotly_chart(fig4, use_container_width=True)
+
 
 
 def plot_mcdm_results(method, rankings):
