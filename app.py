@@ -64,6 +64,31 @@ def _execute_mcdm_algorithms(matrix, criteria_types, weights):
     
     return results
 
+def _compute_average_result(results):
+    average_results = {}
+    for _, classifiers in results.items():
+                for classifier, (rank, score) in classifiers.items():
+                    if classifier not in average_results:
+                        average_results[classifier] = {
+                            "Total Rank": 0,
+                            "Total Score": 0,
+                            "Count": 0,
+                        }
+                    average_results[classifier]["Total Rank"] += rank
+                    average_results[classifier]["Total Score"] += score
+                    average_results[classifier]["Count"] += 1
+
+    average_rankings = []
+    for classifier, data in average_results.items():
+        average_rankings.append({
+            "Klasyfikator": classifier,
+            "Średni ranking": data["Total Rank"] / data["Count"],
+            "Średni wynik": data["Total Score"] / data["Count"],
+        })
+
+    return average_rankings
+
+
 #tutaj cala glowna logika aplikacji
 def main():
     st.title("Ocena jakości działania klasyfikatorów przy użyciu metod MCDM")
@@ -95,11 +120,11 @@ def main():
         st.dataframe(df)
         visualize_alternatives(df)
 
-         # Adjust weights
-        headers = list(df.columns)[1:]  # Skip the first column (e.g., Model name)
+        #dostosowanie wag
+        headers = list(df.columns)[1:]
         weights = _adjust_weights(headers)
 
-        # Determine criteria types
+        #określenie kryteriów
         criteria_types = {
             "Accuracy": 1,
             "Sensitivity": 1,
@@ -113,32 +138,41 @@ def main():
             "Time": -1,
         }
 
-        # Execute MCDM algorithms
-        if st.button("Evaluate with MCDM Algorithms"):
+        
+        if st.button("Oceń klasyfikatory"):
             alternatives = (
                 df.loc[:, ~df.columns.isin(["Max_Sum", "Min_Sum"])]
                 .set_index("Model name")
                 .copy()
             )
             
-            with st.spinner("Evaluating classifiers..."):
+            with st.spinner("Ocenianie klasyfikatorów..."):
                 results = _execute_mcdm_algorithms(alternatives, criteria_types, weights)
 
-            st.subheader("MCDM Rankings")
+            st.subheader("Utworzone rankingi")
             
             for method, rankings in results.items():
                 comparison_data = []
                 for classifier, (rank, score) in rankings.items():
                     comparison_data.append({
-                        "Classifier": classifier,
-                        "Rank": rank,
-                        "Score": score
+                        "Klasyfikator": classifier,
+                        "Ranking": rank,
+                        "Wynik": score
                     })
                 comparison_df = pd.DataFrame(comparison_data)
-                st.write(f"### {method} Result:")
+                st.write(f"### {method} rezultat:")
                 st.dataframe(comparison_df)
 
                 plot_mcdm_results(method, rankings)
+
+            # uśrednienie rankingów
+            average_rankings = _compute_average_result(results)
+
+            # konwersja do df oraz sortowanie danych
+            average_rankings_df = pd.DataFrame(average_rankings).sort_values(by="Średni ranking")
+
+            st.subheader("Ranking uśredniony:")
+            st.dataframe(average_rankings_df)
 
 if __name__ == "__main__":
     main()

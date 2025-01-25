@@ -86,32 +86,32 @@ def visualize_alternatives(df):
 
 
 def plot_mcdm_results(method, rankings):
-    # Convert rankings into a DataFrame
+    # Konwersja danych do DF
     method_data = [(classifier, rank, score) for classifier, (rank, score) in rankings.items()]
-    method_df = pd.DataFrame(method_data, columns=["Classifier", "Rank", "Score"])
+    method_df = pd.DataFrame(method_data, columns=["Klasyfikator", "Ranking", "Wynik"])
     
-    # Sort by rank to ensure proper order
-    method_df = method_df.sort_values(by="Rank")
+    # Sortowanie danych po rankingu
+    method_df = method_df.sort_values(by="Ranking")
     
-    # Create a horizontal bar plot for each method's results
+    # Tworzenie horyzontalnego wykresu słupkowego
     fig = px.bar(
         method_df, 
-        x="Score", 
-        y="Classifier", 
-        color="Classifier", 
-        orientation="h",  # Horizontal bars
-        title=f"Classifier Scores for {method}",
-        labels={"Score": "Score", "Classifier": "Classifier"},
-        color_discrete_sequence=px.colors.qualitative.Set2  # Use the Set2 color palette
+        x="Wynik", 
+        y="Klasyfikator", 
+        color="Klasyfikator", 
+        orientation="h",
+        title=f"Wynik klasyfikatora dla metody: {method}",
+        labels={"Wynik": "Wynik", "Klasyfikator": "Klasyfikator"},
+        color_discrete_sequence=px.colors.qualitative.Set2 
     )
     
-    # Update the layout for better readability
+    # Dostosowanie layoutu wykresu
     fig.update_layout(
-        xaxis_title="Score",
-        yaxis_title="Classifier",
+        xaxis_title="Wynik",
+        yaxis_title="Klasyfikator",
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(l=100, r=100, t=50, b=50)
     )
     
-    # Display the plot within the Streamlit app
+    # Wyświetlenie wykresu w streamlicie
     st.plotly_chart(fig, use_container_width=True)
