@@ -43,7 +43,6 @@ class AHP(RankingAlgorithm):
             weighted_matrix[criterion] *= weight
 
         scores = weighted_matrix.sum(axis=1)
-        rankings = scores.rank(ascending=False).astype(int)
 
         result = {alternative: (rank, score)
                for rank, (alternative, score) in enumerate(
