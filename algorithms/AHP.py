@@ -45,10 +45,10 @@ class AHP(RankingAlgorithm):
         scores = weighted_matrix.sum(axis=1)
         rankings = scores.rank(ascending=False).astype(int)
 
-        result = {
-            alternative: (rank, score)
-            for alternative, rank, score in zip(weighted_matrix.index, rankings, scores)
-        }
+        result = {alternative: (rank, score)
+               for rank, (alternative, score) in enumerate(
+                   sorted(scores.items(), key=lambda x: x[1], reverse=True),
+                   start=1)}
 
         return result
 
